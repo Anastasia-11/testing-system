@@ -1,0 +1,55 @@
+﻿@model IQueryable<Test>
+
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Тесты</title>
+</head>
+<body>
+    <h4>Список тестов</h4>
+    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+
+    @if (!Model.Any())
+    {
+        <li class="list-group-item">Тестов нет</li>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">№</th>
+                    <th scope="col">Название теста</th>
+                    <th scope="col">Категория</th>
+                    <th scope="col">Уведомления</th>
+                    <th scope="col">Информация</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+            @{var counter = 0;    
+                foreach (var test in Model)
+                {
+                    counter++;
+                    <tr>
+                        <th scope="row">@counter</th>
+                        <td>@test.Name</td>
+                        <td>@test.Category</td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary" asp-route-testId="@test.Id" asp-controller="Notification" asp-action="ConfigureNotifications">Настроить</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-primary" asp-route-testId="@test.Id" asp-controller="Admin" asp-action="EditTest">Редактировать</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-sm btn-outline-danger" asp-route-testId="@test.Id" asp-controller="Admin" asp-action="DeleteTest">Удалить</a>
+                        </td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    }
+    <a class="btn btn-primary" asp-controller="Admin" asp-action="CreateTest">Создать тест</a>
+</body>
+</html>

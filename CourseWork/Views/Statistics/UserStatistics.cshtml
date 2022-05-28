@@ -1,0 +1,66 @@
+﻿@model List<UserResult>
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <title>Статистика пользователей</title>
+</head>
+<body>
+<div>
+      @if (!Model.Any())
+      {
+         <li class="list-group-item">Пройденных тестов нет</li>
+      }
+      else
+      {
+          <table class="table">
+              <thead>
+              <tr>
+                  <th scope="col">№</th>
+                  <th scope="col">Название теста</th>
+                  <th scope="col">Время начала</th>
+                  <th scope="col">Время окончания</th>
+                  <th scope="col">Правильно отвечено</th>
+                  <th scope="col">Оценка</th>
+                  <th scope="col"></th>
+              </tr>
+              </thead>
+              <tbody>
+              @{
+                  var counter = 0;
+                  foreach (var userResult in Model)
+                  {
+                      counter++;
+                      <tr>
+                          <th scope="row">@counter</th>
+                          <td>@userResult.Test?.Name</td>
+                          <td>@userResult.BeginTime</td>
+                          <td>@userResult.EndTime</td>
+                          <td>@Math.Round(userResult.RightPercent * 100, 2) %</td>
+                          <td>@Math.Round(userResult.RightPercent * 10)</td>
+                          @if (User.IsInRole("tutor") || User.IsInRole("admin"))
+                          {
+                              <td>
+                                  <a class="nav-link text-dark" asp-area="" asp-controller="Statistics" asp-route-userResultId="@userResult.Id" asp-action="UserResultInfoWithAnswers">Подробнее</a>
+                              </td>
+                          }
+                          else
+                          {
+                              <td>
+                                  <a class="nav-link text-dark" asp-area="" asp-controller="Statistics" asp-route-userResultId="@userResult.Id" asp-action="UserResultInfo">Подробнее</a>
+                              </td>
+                          }
+                      </tr>
+                  }
+              }
+              </tbody>
+          </table>
+      }
+</div>
+</body>
+</html>

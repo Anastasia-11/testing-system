@@ -1,0 +1,29 @@
+﻿@model CourseWork.ViewModels.UserResultViewModel
+
+@{
+    var maxScore = Model.Questions.Sum(q => q.Cost);
+}
+
+<h4>@Model.UserResult.Test.Name</h4>
+<dl class="row">
+    <dt class="col-sm-3">Категория:</dt>
+    <dd class="col-sm-9">@Model.UserResult.Test.Category</dd>
+        
+    <dt class="col-sm-3">Описание:</dt>
+    <dd class="col-sm-9"><p>@Model.UserResult.Test.Description</p></dd>
+        
+    <dt class="col-sm-3">Время начала тестирования:</dt>
+    <dd class="col-sm-9">@Model.UserResult.BeginTime</dd>
+        
+    <dt class="col-sm-3">Время окончания тестирования:</dt>
+    <dd class="col-sm-9">@Model.UserResult.EndTime</dd>
+        
+    <dt class="col-sm-3">Отвечено вопросов:</dt>
+    <dd class="col-sm-9">@Model.UserResult.TotalQuestions/@Model.UserResult.TotalQuestions</dd>
+        
+    <dt class="col-sm-3">Получено баллов:</dt>
+    <dd class="col-sm-9">@Model.UserResult.Score/@maxScore</dd>
+        
+    <dt class="col-sm-3">Оценка:</dt>
+    <dd class="col-sm-9">@Math.Round(Model.UserResult.RightPercent * 10)</dd>
+</dl>

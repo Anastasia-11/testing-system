@@ -1,0 +1,29 @@
+﻿@model Suggestion
+
+@{
+    Layout = "_Layout";
+}
+
+<h2>Форма для ваших предложений!</h2>
+<form class="row g-3" method="post" asp-controller="Suggestion" asp-action="CreateSuggestion" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly"></div>
+    <input type="hidden" asp-for="Id">
+    <input type="hidden" asp-for="CreationDate">
+    <div class="col-12">
+        <label class="form-label" asp-for="Theme"></label><br />
+        <input class="form-control" asp-for="Theme" />
+        <span asp-validation-for="Theme"></span>
+    </div>
+    <div class="col-12">
+        <label class="form-label" asp-for="Text"></label><br />
+        <textarea  class="form-control" asp-for="Text"></textarea>
+        <span asp-validation-for="Text"></span>
+    </div>
+    <div class="col-12">
+        <label  class="control-label">Изображение</label>
+        <input type="file" name="image" class="form-control" />
+    </div>
+    <div>
+        <input class="btn btn-outline-dark" type="submit" value="Отправить" />
+    </div>
+</form> 

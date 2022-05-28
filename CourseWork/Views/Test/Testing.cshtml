@@ -1,0 +1,103 @@
+﻿@using CourseWork.Models.Enums
+@model CourseWork.ViewModels.QuestionViewModel
+
+@{
+    Layout = "_Layout";
+    var timestamp = new DateTimeOffset(Model.TestCloseTime).ToUnixTimeMilliseconds();
+}
+
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <title>Выполнение теста</title>
+</head>
+<body>
+<div asp-validation-summary="All" class="text-danger"></div>
+<form method="post" asp-controller="Test" asp-action="Testing">
+    <input type="hidden" id="testId" asp-for="Question.TestId" value="@Model.Question.TestId"/>
+    <input type="hidden" asp-for="Question.Id" value="@Model.Question.Id"/>
+    <input type="hidden" asp-for="Question.Cost" value="@Model.Question.Cost"/>
+    <input type="hidden" asp-for="Question.Number" value="@Model.Question.Number"/>
+    <input type="hidden" asp-for="Question.Text" value="@Model.Question.Text"/>
+    <div class="form-group">
+        <p>@Model.Question.Text</p>
+    </div>
+    @switch (Model.Question.Type)
+    {
+        case QuestionType.FreeEntry:
+            <input type="hidden" asp-for="@Model.Answers[0].Id" value="@Model.Answers[0].Id"/>
+            <input type="hidden" asp-for="@Model.Answers[0].QuestionId" value="@Model.Answers[0].QuestionId"/>
+            <input type="hidden" asp-for="@Model.Answers[0].CorrectResponse" value="@Model.Answers[0].CorrectResponse"/>
+            <input type="hidden" asp-for="@Model.Answers[0].Number" value="@Model.Answers[0].Number"/>
+            <input type="hidden" asp-for="@Model.UserAnswers[0].Id" value="@Model.UserAnswers[0].Id"/>
+            <input type="hidden" asp-for="@Model.UserAnswers[0].QuestionNumber" value="@Model.UserAnswers[0].QuestionNumber"/>
+            <textarea name="UserAnswers[0].AnswerText" class="form-control"></textarea>
+            break;
+        case QuestionType.WithAnswerOptions:
+        {
+            var singleResponse = Model.Answers.Count(a => a.IsCorrect) == 1;
+            for (var index = 0; index < Model.Answers.Count; index++)
+            {
+                var i = index;
+                <input type="hidden" asp-for="@Model.Answers[i].Id" value="@Model.Answers[i].Id"/>
+                <input type="hidden" asp-for="@Model.Answers[i].QuestionId" value="@Model.Answers[i].QuestionId"/>
+                <input type="hidden" asp-for="@Model.Answers[i].IsCorrect" value="@Model.Answers[i].IsCorrect"/>
+                <input type="hidden" asp-for="@Model.Answers[i].Number" value="@Model.Answers[i].Number"/>
+                <input type="hidden" asp-for="@Model.UserAnswers[i].Id" value="@Model.UserAnswers[i].Id"/>
+                <input type="hidden" asp-for="@Model.UserAnswers[i].QuestionNumber" value="@Model.UserAnswers[i].QuestionNumber"/>
+                <input type="hidden" asp-for="@Model.UserAnswers[i].AnswerNumber" value="@Model.Answers[i].Number"/>
+                if (singleResponse)
+                {
+                    <div class="input-group">
+                        <div class="form-check">
+                            <input class="form-check-input" asp-for="SelectedUserAnswerId" type="radio" value="@Model.UserAnswers[i].Id">
+                            <label class="form-check-label">@Model.Answers[i].Response</label>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="input-group">
+                        <div class="form-check">
+                            <input class="form-check-input" name="UserAnswers[@i].IsCorrect" asp-for="@Model.UserAnswers[i].IsCorrect" type="checkbox" />
+                            <label class="form-check-label">@Model.Answers[i].Response</label>
+                        </div>
+                    </div>
+                }
+            }
+            break;
+        }
+    }
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <button type="submit" asp-action="Testing" asp-route-currentPage="@(Model.PageViewModel.CurrentPageNumber + 1)" class="btn btn-outline-dark">
+            Следующий вопрос
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </button>
+        <button id="endTest" type="submit" asp-action="EndTesting" class="btn btn-outline-dark" hidden>
+            Завершить тестирование
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </button>
+    }
+    else
+    {
+        <button id="endTest" type="submit" asp-action="EndTesting" class="btn btn-outline-dark">
+            Завершить тестирование
+            <i class="glyphicon glyphicon-chevron-right"></i>
+        </button>
+    }
+</form>
+</body>
+</html>
+
+<script>
+const deadline = new Date(@timestamp);
+
+setInterval(function () {
+    const diff = deadline - new Date();
+    if (diff <= 0) {
+        document.getElementById("endTest").click();
+    }
+}, 1000);
+</script>

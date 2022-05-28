@@ -1,0 +1,38 @@
+﻿@model CourseWork.ViewModels.RegisterViewModel
+<h2>Регистрация</h2>
+<form class="row g-3" method="post" asp-controller="Account" asp-action="Register">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="col-12">
+        <label class="form-label" asp-for="Name"></label><br />
+        <input class="form-control" asp-for="Name" />
+        <span asp-validation-for="Name"></span>
+    </div>
+    <div class="col-md-5">
+        <label class="form-label" asp-for="Email"></label><br />
+        <input class="form-control" asp-for="Email" />
+        <span asp-validation-for="Email"></span>
+    </div>
+    <div class="col-md-5">
+        <label class="form-label" asp-for="PhoneNumber"></label><br />
+        <input class="form-control" asp-for="PhoneNumber" />
+        <span asp-validation-for="PhoneNumber"></span>
+    </div>
+    <div class="col-md-2">
+        <label class="form-label" asp-for="Group"></label><br />
+        <input class="form-control" type="number" asp-for="Group" />
+        <span asp-validation-for="Group"></span>
+    </div>
+    <div class="col-12">
+        <label class="form-label" asp-for="Password"></label><br />
+        <input class="form-control" asp-for="Password" />
+        <span asp-validation-for="Password"></span>
+    </div>
+    <div class="col-12">
+        <label class="form-label" asp-for="PasswordConfirm"></label><br />
+        <input class="form-control" asp-for="PasswordConfirm" />
+        <span asp-validation-for="PasswordConfirm"></span>
+    </div>
+    <div>
+        <input class="btn btn-outline-dark" type="submit" value="Зарегистрироваться" />
+    </div>
+</form> 

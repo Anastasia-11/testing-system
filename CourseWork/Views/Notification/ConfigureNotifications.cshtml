@@ -1,0 +1,49 @@
+﻿@model List<CourseWork.Models.User>
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <title>Настройка уведомлений</title>
+</head>
+<body>
+<form asp-action="ConfigureNotifications" method="post">
+    <input type="hidden" name="testId" value="@ViewBag.testId"/>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">№</th>
+            <th scope="col">Имя пользователя</th>
+            <th scope="col">Email</th>
+            <th scope="col">Группа</th>
+            <th scope="col">Уведомить</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{
+            var counter = 0;
+            foreach (var user in Model)
+            {
+                counter++;
+                <tr>
+                    <th scope="row">@counter</th>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@user.Group</td>
+                    <td>
+                        <input class="form-check-input" type="checkbox" name="emails" value="@user.Email">
+                    </td>
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+    <textarea name="comment" class="form-control" placeholder="Введите ваш комментарий"></textarea>
+    <button type="submit" class="btn btn-outline-primary">Оправить уведомления</button>
+</form>
+</body>
+</html>

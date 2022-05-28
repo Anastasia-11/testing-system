@@ -1,0 +1,52 @@
+﻿@model List<CourseWork.Models.UserResult>
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <title>Статистика по тесту</title>
+</head>
+<body>
+<div>
+      <table class="table">
+          <thead>
+          <tr>
+              <th scope="col">№</th>
+              <th scope="col">Имя пользователя</th>
+              <th scope="col">Email</th>
+              <th scope="col">Время начала</th>
+              <th scope="col">Время окончания</th>
+              <th scope="col">Отвечено вопросов</th>
+              <th scope="col">Результат</th>
+              <th scope="col"></th>
+          </tr>
+          </thead>
+          <tbody>
+              @{
+                  var counter = 0;
+                  foreach (var userResult in Model)
+                  {
+                      counter++;
+                      <tr>
+                          <th scope="row">@counter</th>
+                          <td>@userResult.User?.UserName</td>
+                          <td>@userResult.User?.Email</td>
+                          <td>@userResult.BeginTime</td>
+                          <td>@userResult.EndTime</td>
+                          <td>@userResult.CompletedQuestions/@userResult.TotalQuestions</td>
+                          <td>@Math.Round(userResult.RightPercent * 100, 2)</td>
+                          <td>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Statistics" asp-route-userResultId="@userResult.Id" asp-action="UserResultInfoWithAnswers">Подробнее</a>
+                        </td>
+                      </tr>
+                  }
+              }
+              </tbody>
+      </table>
+</div>
+</body>
+</html>

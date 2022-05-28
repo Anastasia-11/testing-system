@@ -1,0 +1,81 @@
+﻿@model List<CourseWork.Models.Test>
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <title>Тесты</title>
+</head>
+<body>
+    @if (!Model.Any())
+    {
+       <li class="list-group-item">Тестов нет</li>
+    }
+    else
+    {
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">№</th>
+                <th scope="col">Название теста</th>
+                <th scope="col">Время начала</th>
+                <th scope="col">Время окончания</th>
+                <th scope="col">Кол-во вопросов</th>
+                <th scope="col">Информация</th>
+                @if (User.IsInRole("tutor") || User.IsInRole("admin"))
+                {
+                    <th scope="col">Статистика</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+        @{
+            var counter = 0;
+            var hasFutureTests = Model.Count != 0 && DateTime.Now < Model[0].CloseTime;
+            foreach (var test in Model)
+            {
+                if (hasFutureTests && counter == 0)
+                {
+                    <tr>
+                        <td colspan="7" style="text-align: center">
+                            <b>Предстоящие тесты</b>
+                        </td>
+                    </tr>
+                }
+                if (hasFutureTests && DateTime.Now > test.CloseTime)
+                {
+                    hasFutureTests = false;
+                    <tr>
+                        <td colspan="7" style="text-align: center">
+                            <b>Прошедшие тесты</b>
+                        </td>
+                    </tr>
+                }
+                counter++;
+                <tr>
+                    <th scope="row">@counter</th>
+                    <td>@test.Name</td>
+                    <td>@test.OpenTime</td>
+                    <td>@test.CloseTime</td>
+                    <td>@test.QuestionsLimit</td>
+                    <td>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Test" asp-route-testId="@test.Id" asp-action="TestInfo">Подробнее</a>
+                    </td>
+                    @if (User.IsInRole("tutor") || User.IsInRole("admin"))
+                    {
+                        <td>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Statistics" asp-route-testId="@test.Id" asp-action="TestStatistics">Посмотреть</a>
+                        </td>
+                    }
+                </tr>
+            }
+        }
+        </tbody>
+    </table>
+    }
+</body>
+</html>

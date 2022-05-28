@@ -1,0 +1,39 @@
+﻿@model UserResult
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <title>Тест пройден</title>
+</head>
+<body>
+    <div>
+        <h4>Результаты тестирования:</h4>
+        <dl class="row">
+            <dt class="col-sm-3">Время начала тестирования:</dt>
+            <dd class="col-sm-9">@Model.BeginTime</dd>
+
+            <dt class="col-sm-3">Время окончания тестирования:</dt>
+            <dd class="col-sm-9">@Model.EndTime</dd>
+
+            <dt class="col-sm-3">Отвечено вопросов:</dt>
+            <dd class="col-sm-9">@Model.CompletedQuestions/@Model.TotalQuestions</dd>
+
+            <dt class="col-sm-3">Правильно отвечено:</dt>
+            <dd class="col-sm-9">@Math.Round(Model.RightPercent * 100, 2) %</dd>
+
+            <dt class="col-sm-3">Оценка:</dt>
+            <dd class="col-sm-9">@Math.Round(Model.RightPercent * 10)</dd>
+        </dl>
+        <form asp-action="BackToTests" method="post">
+            <input type="hidden" name="userResultId" value="@ViewBag.userResultId"/>
+            <textarea name="comment" class="form-control" placeholder="Введите ваш комментарий"></textarea>
+            <button type="submit" class="btn btn-outline-primary">Вернуться к тестам</button>
+        </form>
+    </div>
+</body>
+</html>

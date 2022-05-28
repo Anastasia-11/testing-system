@@ -1,0 +1,82 @@
+﻿@using CourseWork.Models.Enums
+@model CourseWork.ViewModels.UserResultViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <title>Просмотр ответов</title>
+</head>
+<body>
+    <div>
+        @await Html.PartialAsync("TestInfoDetailedPartial", Model)
+        @if (!Model.UserResult.UserAnswers.Any())
+        {
+            <li class="list-group-item">Отвеченных вопросов нет</li>
+        }
+        else
+        {
+            var userAnswers = Model.UserResult.UserAnswers.ToList();
+            for (int k = 0, j = 0; k < Model.Questions.Count; k++)
+            {
+                <br>
+                <h6>Вопрос @(k + 1):</h6>
+                <p>@Model.Questions[k].Text</p>
+                switch (Model.Questions[k].Type)
+                {
+                    case QuestionType.FreeEntry:
+                    {
+                        <input type="text" class="form-control" value="@userAnswers[j++].AnswerText" readonly>
+                    }
+                        break;
+                    case QuestionType.WithAnswerOptions:
+                    {
+                        var answers = Model.Questions[k].Answers.ToList();
+                        var singleResponse = answers.Count(a => a.IsCorrect) == 1;
+                        for (var i = 0; i < answers.Count; i++)
+                        {
+                            if (singleResponse)
+                            {
+                                <div class="input-group">
+                                    <div class="form-check">
+                                        @if (userAnswers[j++].IsCorrect)
+                                        {
+                                            <input class="form-check-input" type="radio" value="@answers[i].Response" checked disabled>
+                                        }
+                                        else
+                                        {
+                                            <input class="form-check-input" type="radio" value="@answers[i].Response" disabled>
+                                        }
+                                        <label class="form-check-label">@answers[i].Response</label>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="input-group">
+                                    <div class="form-check">
+                                        @if (userAnswers[j++].IsCorrect)
+                                        {
+                                            <input class="form-check-input" type="checkbox" checked disabled/>
+                                        }
+                                        else
+                                        {
+                                            <input class="form-check-input" type="checkbox" disabled/>
+                                        }
+                                        <label class="form-check-label">@answers[i].Response</label>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                        break;
+                }
+            }
+        }
+    </div>
+</body>
+</html>

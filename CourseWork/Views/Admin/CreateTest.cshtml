@@ -1,0 +1,108 @@
+﻿@using CourseWork.Extensions
+@model CourseWork.ViewModels.CreateTestViewModel
+
+<head>
+    <script src="~/js/update_test.js"></script>
+    <title>Создание теста</title>
+</head>
+<body>
+<h4>Новый тест</h4>
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <form class="row g-3" method="post" asp-controller="Admin" asp-action="CreateTest">
+        <div class="col-12">
+            <input type="hidden" id="testId" asp-for="TestId" value="@Model.TestId"/>
+        </div>
+        <div class="col-12">
+            <label asp-for="Category" class="control-label">Категория</label>
+            <input type="text" asp-for="Category" class="form-control"/>
+        </div>
+        <div class="col-12">
+            <label asp-for="Name" class="control-label">Название</label>
+            <input asp-for="Name" class="form-control"/>
+        </div>
+        <div class="col-12">
+            <label asp-for="Description" class="control-label">Описание</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+        <div class="col-12">
+            <div class="form-check">
+                <label class="form-check-label" asp-for="ShuffleQuestions">Перемешать вопросы</label>
+                <input class="form-check-input" type="checkbox" asp-for="ShuffleQuestions" name="ShuffleQuestions"/>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label asp-for="OpenTime">Время начала теста</label>
+            <input class="form-control" asp-for="OpenTime" asp-format="{0:yyyy-MM-ddTHH:mm}" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")">
+        </div>
+        <div class="col-md-4">
+            <label asp-for="CloseTime">Время окончания теста</label>
+            <input class="form-control" asp-for="CloseTime" asp-format="{0:yyyy-MM-ddTHH:mm}" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")">
+        </div>
+        <div class="col-md-4">
+            <label asp-for="QuestionsLimit" class="control-label">Лимит вопросов для теста</label>
+            <input id="QuestionsLimit" class="form-control" type="number" asp-for="QuestionsLimit" min="0" max="@Model.QuestionsLimit" step="1"/>
+        </div>
+        <div class="col-12">
+            <div id="Questions"></div>
+        </div>
+        <div class="col-12">
+            <label asp-for="Types" class="control-label">Выберите тип вопроса:</label>
+        </div>
+        <div class="input-group">
+            <select id="questionType" name="questionType" class="form-select">
+                @foreach(var questionType in Model.Types)
+                {
+                    <option value="@questionType">@questionType.ToFriendlyString()</option>
+                }
+            </select>
+            <input type="button" class="btn btn-outline-primary" value="Добавить вопрос" onclick="addQuestion()"/>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a asp-action="Tests" class="btn btn-secondary">Отмена</a>
+    </form>
+</body>
+
+<script>
+let questionsCount = @Html.Raw(Json.Serialize(Model.Questions != null ? Model.Questions.Count : 0));
+
+let Questions = [];
+
+Init();
+
+function Init() {
+    if (questionsCount !== 0)
+    {
+        @{
+        var questionsList = Model.Questions.ToList();
+        for (int i = 0; i < questionsList.Count; i++)
+        {
+            var question = Model.Questions[i];
+            @:Questions.push({
+            @:Id: @Html.Raw(Json.Serialize(question.Id)),
+            @:TestId: @Html.Raw(Json.Serialize(question.TestId)),
+            @:Type: @Html.Raw(Json.Serialize(question.Type)),
+            @:Text: @Html.Raw(Json.Serialize(question.Text)),
+            @:Number: @Html.Raw(Json.Serialize(question.Number)),
+            @:Cost: @Html.Raw(Json.Serialize(question.Cost)),
+            @:Answers:[]        
+            @:})
+              
+            var answersList = question.Answers.ToList();
+            for (int j = 0; j < answersList.Count; j++)
+            {
+                var answer = question.Answers.ToList()[j];
+                @:Questions[@i].Answers.push({
+                @:Id: @Html.Raw(Json.Serialize(answer.Id)),
+                @:QuestionId: @Html.Raw(Json.Serialize(answer.QuestionId)),
+                @:IsCorrect: @Html.Raw(Json.Serialize(answer.IsCorrect)),
+                @:Response: @Html.Raw(Json.Serialize(answer.Response)),
+                @:CorrectResponse: @Html.Raw(Json.Serialize(answer.CorrectResponse)),
+                @:Number: @Html.Raw(Json.Serialize(answer.Number)),
+                @:})
+            }
+        }}
+    }
+    
+    redrawQuestions();
+}
+</script>

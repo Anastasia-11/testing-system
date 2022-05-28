@@ -1,0 +1,16 @@
+﻿@model Test
+
+<h4>@Model.Name</h4>
+<dl class="row">
+    <dt class="col-sm-3">Категория:</dt>
+    <dd class="col-sm-9">@Model.Category</dd>
+    
+    <dt class="col-sm-3">Описание:</dt>
+    <dd class="col-sm-9"><p>@Model.Description</p></dd>
+    
+    <dt class="col-sm-3">Время начала тестирования:</dt>
+    <dd class="col-sm-9">@Model.OpenTime</dd>
+    
+    <dt class="col-sm-3">Время окончания тестирования:</dt>
+    <dd class="col-sm-9">@Model.CloseTime</dd>
+</dl>

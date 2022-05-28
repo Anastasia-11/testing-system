@@ -1,0 +1,46 @@
+﻿@model List<CourseWork.Models.User>
+
+@{
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+    <title>Статистика пользователей</title>
+</head>
+<body>
+<div>
+      <table class="table">
+          <thead>
+          <tr>
+              <th scope="col">№</th>
+              <th scope="col">Имя пользователя</th>
+              <th scope="col">Email</th>
+              <th scope="col">Группа</th>
+              <th scope="col">Статистика</th>
+          </tr>
+          </thead>
+          <tbody>
+              @{
+                  var counter = 0;
+                  foreach (var user in Model)
+                  {
+                      counter++;
+                      <tr>
+                          <th scope="row">@counter</th>
+                          <td>@user.UserName</td>
+                          <td>@user.Email</td>
+                          <td>@user.Group</td>
+                          <td>
+                              <a class="nav-link text-dark" asp-area="" asp-controller="Statistics" asp-route-userId="@user.Id" asp-action="UserStatistics">Подробнее</a>
+                          </td>
+                      </tr>
+                  }
+              }
+              </tbody>
+      </table>
+</div>
+</body>
+</html>

@@ -153,7 +153,6 @@ function onQuestionTextChange(text, index) {
 }
 
 function onQuestionCostChange(value, index) {
-    alert(value);
     Questions[index].Cost = value;
 }
 
